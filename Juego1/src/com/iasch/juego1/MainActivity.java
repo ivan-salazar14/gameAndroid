@@ -9,9 +9,11 @@ import org.andengine.engine.options.ScreenOrientation;
 import org.andengine.engine.options.WakeLockOptions;
 import org.andengine.engine.options.resolutionpolicy.FillResolutionPolicy;
 import org.andengine.entity.primitive.Rectangle;
+import org.andengine.entity.scene.IOnSceneTouchListener;
 import org.andengine.entity.scene.Scene;
 import org.andengine.entity.sprite.AnimatedSprite;
 import org.andengine.entity.sprite.Sprite;
+import org.andengine.input.touch.TouchEvent;
 import org.andengine.opengl.texture.TextureOptions;
 import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
 import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegionFactory;
@@ -21,7 +23,7 @@ import org.andengine.opengl.texture.region.ITiledTextureRegion;
 import org.andengine.ui.activity.SimpleBaseGameActivity;
 
 
-public class MainActivity extends SimpleBaseGameActivity {
+public class MainActivity extends SimpleBaseGameActivity implements IOnSceneTouchListener {
 
 	private Camera mCamera;
 	private Rectangle rectangulo;
@@ -40,6 +42,9 @@ public class MainActivity extends SimpleBaseGameActivity {
 		
 		//declaramos las  opciones del motor
 		EngineOptions engineOptions= new EngineOptions(true, ScreenOrientation.LANDSCAPE_FIXED, new FillResolutionPolicy(), mCamera);
+		
+		engineOptions.getAudioOptions().setNeedsSound(true);
+		engineOptions.getAudioOptions().setNeedsMusic(true);
 		// impedimos que la pantalla se apague por inactividad
 		engineOptions.setWakeLockOptions(WakeLockOptions.SCREEN_ON);
 		return engineOptions;
@@ -53,7 +58,7 @@ public class MainActivity extends SimpleBaseGameActivity {
 		//se crea atlas, se define tamaño y textura
 		miAtlas = new BitmapTextureAtlas(getTextureManager(), 800, 800,TextureOptions.DEFAULT);
 		//ubicamos img en el atlas
-		texturaChar= BitmapTextureAtlasTextureRegionFactory.createFromAsset(miAtlas, this, "char.png",0,0);
+		texturaChar= BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(miAtlas, this, "char.png",0,0,4,5);
 		texturaAnimada= BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(miAtlas, this, "animado.png",76,0,10,10);
 		miAtlas.load();//se carga
 		
@@ -79,6 +84,12 @@ public class MainActivity extends SimpleBaseGameActivity {
 		scene.attachChild(spriteAnimado);
 	//	scene.attachChild(rectangulo);
 		return scene;
+	}
+
+	@Override
+	public boolean onSceneTouchEvent(Scene pScene, TouchEvent pSceneTouchEvent) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }
