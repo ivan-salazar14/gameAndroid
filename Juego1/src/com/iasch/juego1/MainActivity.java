@@ -3,6 +3,8 @@ package com.iasch.juego1;
 
 import java.io.IOException;
 
+import org.andengine.audio.sound.Sound;
+import org.andengine.audio.sound.SoundFactory;
 import org.andengine.engine.camera.Camera;
 import org.andengine.engine.options.EngineOptions;
 import org.andengine.engine.options.ScreenOrientation;
@@ -34,6 +36,7 @@ public class MainActivity extends SimpleBaseGameActivity implements IOnSceneTouc
 	private Sprite charSprite;
 	private ITiledTextureRegion texturaAnimada;
 	private AnimatedSprite spriteAnimado;
+	private Sound  miSonido;
 	
 	@Override
 	public EngineOptions onCreateEngineOptions() {
@@ -62,6 +65,23 @@ public class MainActivity extends SimpleBaseGameActivity implements IOnSceneTouc
 		texturaAnimada= BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(miAtlas, this, "animado.png",76,0,10,10);
 		miAtlas.load();//se carga
 		
+		
+		try{
+			//creo que la explicacion está demas
+	    	//lo que si indico es que tambien hay una clase musica
+	    	//pero se usa para canciones más largas
+	    	//y que se repiten constantemente	    	
+	     
+			miSonido =SoundFactory.createSoundFromAsset( getSoundManager(), this,"sonido/sonido.mp3");
+			
+			//quiere decir q no se repite constantemente
+			miSonido.setLooping(false);
+			
+		}   catch (IOException e) 
+	    {
+	        e.printStackTrace();
+	    }
+	    
 		//////////////////////////////////////////////////////////----------------------/////////////////////////////////////////
 		//rectangulo = new Rectangle(mCamera.getWidth()/2, mCamera.getHeight()/2, 100, 100, getVertexBufferObjectManager());
 		// TODO Auto-generated method stub
@@ -82,6 +102,10 @@ public class MainActivity extends SimpleBaseGameActivity implements IOnSceneTouc
 		charSprite=new Sprite(100, 200, texturaChar, getVertexBufferObjectManager());
 		scene.attachChild(charSprite);
 		scene.attachChild(spriteAnimado);
+		
+		
+		//para que el callback del touch listener funcione hay q adicinarla a una escena
+		scene.setOnSceneTouchListener(this);
 	//	scene.attachChild(rectangulo);
 		return scene;
 	}
@@ -89,6 +113,11 @@ public class MainActivity extends SimpleBaseGameActivity implements IOnSceneTouc
 	@Override
 	public boolean onSceneTouchEvent(Scene pScene, TouchEvent pSceneTouchEvent) {
 		// TODO Auto-generated method stub
+		if(pSceneTouchEvent.isActionDown()){
+			
+			miSonido.play();
+		}
+		
 		return false;
 	}
 
